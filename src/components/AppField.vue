@@ -10,8 +10,10 @@ const props = withDefaults(
     arrow?: boolean
     haptic?: boolean
     stack?: boolean
+    /** 表单内联用法：去掉左右内边距与分隔线，背景透明，与输入控件对齐 */
+    flush?: boolean
   }>(),
-  { clickable: false, arrow: true, haptic: true, stack: false }
+  { clickable: false, arrow: true, haptic: true, stack: false, flush: false }
 )
 
 const emit = defineEmits<{ (e: 'click'): void }>()
@@ -32,7 +34,11 @@ function onClick(ev: MouseEvent) {
   <div
     v-ripple
     class="lume-field"
-    :class="{ 'lume-field--clickable': clickable, 'lume-field--stack': stack }"
+    :class="{
+      'lume-field--clickable': clickable,
+      'lume-field--stack': stack,
+      'lume-field--flush': flush
+    }"
     @click="onClick"
   >
     <div v-if="$slots.leading" class="lume-field__leading"><slot name="leading" /></div>
@@ -55,13 +61,14 @@ function onClick(ev: MouseEvent) {
   min-height: 48px;
   padding: 10px var(--lume-pad);
   border-bottom: 1px solid var(--lume-border);
-  background: var(--lume-surface);
+  background: transparent;
   transition: background var(--lume-dur) var(--lume-ease);
 }
 .lume-field:last-child { border-bottom: 0; }
 .lume-field--clickable { cursor: pointer; }
 .lume-field--clickable:active { background: var(--lume-surface-2); }
 .lume-field--stack { flex-direction: column; align-items: stretch; gap: 8px; }
+.lume-field--flush { padding: 0; min-height: 0; border-bottom: 0; }
 .lume-field__label { font-size: var(--lume-font); }
 .lume-field__desc { font-size: var(--lume-font-sm); color: var(--lume-muted); margin-top: 2px; }
 .lume-field__value {
