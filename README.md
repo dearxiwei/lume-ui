@@ -1,6 +1,6 @@
 # @lume/ui
 
-从 `jellyfin_lume_manager` 的 UI 质感层**单独移植**出来的组件库：
+一套可复用、可换肤的 Vue 3 组件库（从真实项目的 UI 质感层沉淀而来）：
 
 - **纯 Vue 3**，**不依赖 Vant 等第三方 UI 库**（低耦合、高内聚；每个组件自包含）
 - **flex 自适应宽**：不做全局 `px→vw` 等比缩放；用 `flex/grid` + `clamp()` 流式尺寸 + 断点，手机/电脑通吃
@@ -105,7 +105,7 @@ toast('已保存', { type: 'success', duration: 2000 })
 
 布局工具类：`.lume-shell`（限宽应用壳）、`.lume-split`（宽屏并排/窄屏堆叠）、`.lume-grid`（自适应卡片）、`.lume-row/.lume-col`。
 
-> **自适应说明**：本库刻意**不**做 `postcss-px-to-viewport` 全局 vw 缩放（那是手机稿等比方案，桌面会失真）；改用 flex/grid + 流式 token + 断点。Vant 版原项目的桌面弱点即在此被规避。
+> **自适应说明**：本库刻意**不**做 `postcss-px-to-viewport` 全局 vw 缩放（那是手机稿等比方案，桌面会失真）；改用 flex/grid + 流式 token + 断点，规避其桌面弱点。
 
 ## 开发与构建
 
@@ -120,5 +120,5 @@ npx vue-tsc --noEmit # 类型检查
 
 ## 与主项目集成
 
-构建产物是**纯静态 JS+CSS**，可被任意宿主使用，包括 Go `embed` 的服务（`secure-gateway/web/`）：
+构建产物是**纯静态 JS+CSS**，可被任意宿主使用，包括 Go `embed` 的静态资源服务：
 把 `dist/` 作为静态资源挂载或内嵌即可，无需 Node 运行时。
