@@ -14,4 +14,7 @@ export { vRipple, vTap } from './directives'
 export { toast, dismiss, toasts } from './toast'
 export type { ToastType, ToastItem } from './toast'
 
+export { alert, confirm, confirm2, confirmSteps, dialogs } from './dialog'
+export type { DialogStep, AlertRequest, ConfirmRequest, DialogRequest } from './dialog'
+
 export * from './components'
