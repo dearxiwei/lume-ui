@@ -1,0 +1,111 @@
+/* lume 质感与布局层：毛玻璃可选、默认曲线动效、flex 自适应工具类 */
+
+/* ---------- flex 自适应布局工具类 ---------- */
+.lume-row { display: flex; align-items: center; gap: var(--lume-gap); }
+.lume-col { display: flex; flex-direction: column; gap: var(--lume-gap); }
+/* 列表容器：无间距，条目靠分隔线（避免条目间出现"无波纹"的白色缝隙） */
+.lume-list { display: flex; flex-direction: column; }
+.lume-wrap { flex-wrap: wrap; }
+.lume-between { justify-content: space-between; }
+.lume-center { justify-content: center; }
+.lume-grow { flex: 1 1 auto; min-width: 0; }
+.lume-fill { flex: 1 1 0; min-width: 0; }
+.lume-safe-top { padding-top: env(safe-area-inset-top); }
+.lume-safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+.lume-scroll { overflow: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+
+/* 自适应卡片网格：随宽度自动增减列（flex 思路的可换行布局） */
+.lume-grid {
+  display: grid;
+  gap: var(--lume-gap);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+}
+
+/* 应用壳：默认铺满整宽（不再桌面居中限宽） */
+.lume-shell {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* 双栏自适应：窄屏堆叠，宽屏并排 */
+.lume-split { display: flex; flex-direction: column; gap: var(--lume-gap); }
+@media (min-width: 768px) {
+  .lume-split { flex-direction: row; align-items: stretch; }
+  .lume-split > * { flex: 1 1 0; min-width: 0; }
+}
+
+/* ---------- 毛玻璃（可选项：root.lume-glass 控制） ---------- */
+.lume-glass {
+  background: var(--lume-surface);
+}
+.lume-glass .lume-panel,
+.lume-glass .lume-bar,
+.lume-glass .lume-card {
+  /* 不透明度由 --lume-glass-ratio 控制（默认 90%，偏磨砂实底，可读性优先） */
+  background: color-mix(in srgb, var(--lume-surface) var(--lume-glass-ratio), transparent);
+  -webkit-backdrop-filter: blur(var(--lume-glass-blur-strong)) saturate(180%);
+  backdrop-filter: blur(var(--lume-glass-blur-strong)) saturate(180%);
+}
+.lume-glass .lume-overlay {
+  -webkit-backdrop-filter: blur(calc(var(--lume-blur) * 0.35)) saturate(160%);
+  backdrop-filter: blur(calc(var(--lume-blur) * 0.35)) saturate(160%);
+}
+
+/* 弹层：阻止滚动穿透（配合 JS 的 body 锁） */
+.lume-overlay { overscroll-behavior: contain; }
+
+/* 无 backdrop-filter 支持时降级为不透明 */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .lume-glass .lume-panel,
+  .lume-glass .lume-bar,
+  .lume-glass .lume-card {
+    background: var(--lume-surface);
+  }
+}
+
+/* ---------- 动效（可选项：root.lume-motion-on 控制） ---------- */
+.lume-motion, .lume-motion * {
+  transition-timing-function: var(--lume-ease);
+}
+.lume-motion-soft { --lume-ease: cubic-bezier(0.4, 0, 0.2, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .lume-motion, .lume-motion * { transition-duration: 1ms !important; animation-duration: 1ms !important; }
+}
+
+/* 表面/层次基础类 */
+.lume-card {
+  background: var(--lume-surface);
+  border: 1px solid var(--lume-border);
+  border-radius: var(--lume-radius);
+  padding: var(--lume-pad);
+}
+.lume-bar {
+  background: var(--lume-surface);
+  border-bottom: 1px solid var(--lume-border);
+  box-shadow: var(--lume-shadow);
+}
+.lume-muted { color: var(--lume-muted); }
+
+/* ---------- 水波（v-ripple） ---------- */
+.lume-ripple-root {
+  position: relative;
+  overflow: hidden;
+  contain: paint;
+  -webkit-tap-highlight-color: transparent;
+}
+.lume-ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.2;
+  transform: scale(0);
+  pointer-events: none;
+  transition: transform 0.22s var(--lume-ease), opacity 0.28s ease;
+}
+.lume-ripple-wave.lume-ripple-spread { transform: scale(1); }
+.lume-ripple-wave.lume-ripple-fade { transform: scale(1); opacity: 0; }

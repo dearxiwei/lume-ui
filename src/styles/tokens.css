@@ -1,0 +1,113 @@
+/* lume design tokens — 默认值均可被 createLume() / CSS 变量覆盖 */
+
+/* 与主题无关的令牌 */
+:root {
+  --lume-radius-sm: 8px;
+  --lume-radius: 14px;
+  --lume-radius-lg: 20px;
+  --lume-blur: 20px;
+  --lume-glass-blur-strong: 28px;
+  --lume-glass-ratio: 90%; /* 毛玻璃不透明度（越高越实、可读性越好） */
+  --lume-ease: cubic-bezier(0.22, 1, 0.36, 1); /* 默认动画曲线 */
+  --lume-dur-fast: 120ms;
+  --lume-dur: 220ms;
+  --lume-dur-slow: 320ms;
+
+  /* 流式尺寸（flex 自适应：随视口平滑伸缩，不做 px→vw 等比缩放） */
+  --lume-font: clamp(14px, 0.24vw + 13px, 16px);
+  --lume-font-sm: clamp(12px, 0.18vw + 11px, 13px);
+  --lume-font-lg: clamp(17px, 0.4vw + 15px, 20px);
+  --lume-gap: clamp(8px, 0.5vw + 7px, 14px);
+  --lume-pad: clamp(12px, 0.9vw + 9px, 20px);
+  --lume-panel-max: 520px;
+
+  /* 主题色 + 前景色（前景色由 JS 按对比自动计算，见 plugin.readableOn） */
+  --lume-primary: #1989fa; /* 主题蓝：保持不变 */
+  --lume-danger: #c24b4b; /* 砖红：略提饱和（比莫兰迪灰红更红一点，仍不刺眼） */
+  --lume-success: #5f7f6a; /* 莫兰迪灰绿（中深、低饱和） */
+  --lume-warning: #ff976a; /* 警告色：按需求豁免，保留偏橙 */
+  --lume-on-primary: #ffffff;
+  --lume-on-danger: #ffffff;
+  --lume-on-success: #ffffff;
+  --lume-on-warning: #1a1a1a;
+  --lume-knob: #ffffff;
+}
+
+/* 亮色：全局默认 + 局部 data-theme="light" */
+:root,
+.lume[data-theme="light"] {
+  --lume-bg: #e8e9ec;
+  --lume-surface: #ffffff;
+  --lume-surface-2: #f2f3f5;
+  --lume-surface-3: #ffffff;
+  --lume-border: #e6e7ea;
+  --lume-text: #1a1a1a;
+  --lume-muted: #8a8f99;
+  --lume-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --lume-mask: rgba(0, 0, 0, 0.45);
+  --lume-toast-bg: rgba(48, 48, 54, 0.98); /* 高级灰（近黑灰、高不透明度） */
+  --lume-toast-fg: #ffffff;
+  --lume-toast-success-bg: var(--lume-success);
+  --lume-toast-error-bg: #b85c5c; /* 莫兰迪红（比 danger 更柔一点） */
+  --lume-toast-warning-bg: #c08a55; /* 莫兰迪琥珀 */
+  color-scheme: light;
+}
+
+/* 暗色：全局 html.dark + 局部 data-theme="dark" */
+html.dark,
+.lume[data-theme="dark"] {
+  --lume-bg: #0a0a0a;
+  --lume-surface: #17171a;
+  --lume-surface-2: #212124;
+  --lume-surface-3: #1c1c1f;
+  --lume-border: #2e2e33;
+  --lume-text: #eaeaea;
+  --lume-muted: #9aa0aa;
+  --lume-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  --lume-mask: rgba(0, 0, 0, 0.6);
+  --lume-toast-bg: #45454d; /* 暗色模式下的高级灰 */
+  --lume-toast-fg: #ffffff;
+  color-scheme: dark;
+}
+
+/* 基础作用域 + 交互一致性（#1 去点击高亮 / #2 默认禁选，输入放行） */
+.lume,
+.lume * {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.lume input,
+.lume textarea,
+.lume [contenteditable="true"],
+.lume [contenteditable=""],
+.lume .lume-select {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+.lume {
+  font-size: var(--lume-font);
+  color: var(--lume-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+/* 应用壳激活时：页面背景与主题一致，避免两侧露出浏览器默认白条 */
+html.lume,
+html.lume body {
+  margin: 0;
+  background: var(--lume-bg);
+  color: var(--lume-text);
+}
+.lume-root {
+  min-height: 100%;
+  background: var(--lume-bg);
+  color: var(--lume-text);
+}
+
+/* 弹层滚动锁（#4/#10）：overflow hidden + 补偿滚动条宽度，防止内容右移变宽 */
+.lume-scroll-lock { overflow: hidden; }
